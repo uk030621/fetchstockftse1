@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 export default function Home() {
     const [prices, setPrices] = useState({});
     //if you want to add FTSE use '^FTSE' to the list
-    const stockSymbols = ['BATS.L', 'NG.L', 'GRG.L', 'SHEL.L', 'SVT.L','LLOY.L','UU.L','BP.L','SGE.L']; // Stock symbols
+    const stockSymbols = ['BATS.L', 'NG.L', 'GRG.L', 'SHEL.L', 'SVT.L','LLOY.L','UU.L','BP.L','SGE.L','BT-A.L']; // Stock symbols
 
     useEffect(() => {
         async function fetchData() {
