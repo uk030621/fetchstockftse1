@@ -34,17 +34,18 @@ export default function Home() {
                     const response = await fetch(`/api/stock?symbol=${symbol}`);
                     const data = await response.json();
                     
-                    // Divide the price by 100 and format to 2 decimal places
+                    // Divide the price by 100 and keep two decimal places
                     const pricePerShare = data.price !== undefined 
                         ? (data.price / 100).toFixed(2) 
                         : 'Error';
                     
                     fetchedPrices[symbol] = pricePerShare;
 
-                    // Calculate total value for this stock and add to portfolio value
+                    // Calculate total value for this stock and round to nearest whole number
                     if (pricePerShare !== 'Error') {
-                        const totalValue = (pricePerShare * sharesHeld[symbol]).toFixed(2);
-                        portfolioValue += parseFloat(totalValue);
+                        const totalValue = Math.round(pricePerShare * sharesHeld[symbol]);
+                        portfolioValue += totalValue;
+                        fetchedPrices[symbol + '_total'] = totalValue.toLocaleString(); // Format with commas
                     }
                 } catch (error) {
                     console.error(`Error fetching data for ${symbol}:`, error);
@@ -53,7 +54,7 @@ export default function Home() {
             }
 
             setPrices(fetchedPrices);
-            setTotalPortfolioValue(portfolioValue.toFixed(2)); // Set the total portfolio value
+            setTotalPortfolioValue(Math.round(portfolioValue).toLocaleString()); // Set the total portfolio value, rounded to nearest whole number and formatted with commas
         }
 
         fetchData();
@@ -61,24 +62,22 @@ export default function Home() {
 
     return (
         <div style={{ textAlign: 'center', marginTop: '50px' }}>
-             {/* Display the total portfolio value */}
-             <h1>My FTSE Portfolio</h1>
-             <h2 style={{ marginTop: '20px' }}>Total Portfolio Value: £{totalPortfolioValue}</h2>
+            <h1 className='heading'>My FTSE Stock Portfolio</h1>
+            {/* Display the total portfolio value */}
+            <h2 className='sub-heading'style={{ marginTop: '20px' }}>Total Portfolio Value: £{totalPortfolioValue}</h2>
             <table style={{ margin: '0 auto', borderCollapse: 'collapse', width: '80%' }}>
-                <thead>
+                <thead className='table-heading'>
                     <tr>
-                        <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Index / Symbol</th>
-                        <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Price per Share (£)</th>
-                        <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Shares Held</th>
-                        <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Total Value (£)</th>
+                        <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Symbol</th>
+                        <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Price per share (£)</th>
+                        <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Shares held</th>
+                        <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Total value (£)</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className='table-body'>
                     {stockSymbols.map(symbol => {
                         const pricePerShare = prices[symbol];
-                        const totalValue = pricePerShare !== undefined && pricePerShare !== 'Error'
-                            ? (pricePerShare * sharesHeld[symbol]).toFixed(2)
-                            : 'Error';
+                        const totalValue = prices[symbol + '_total'];
 
                         return (
                             <tr key={symbol}>
@@ -94,7 +93,7 @@ export default function Home() {
                         );
                     })}
                 </tbody>
-            </table>
+            </table> 
         </div>
     );
 }

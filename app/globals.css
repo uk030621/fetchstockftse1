@@ -1,4 +1,19 @@
 body{
   font-family: Arial, Helvetica, sans-serif;
+  color: black;
+}
+
+.heading{
+  color:black;
+  font-size: 1 rem;
+  font-weight: bolder;
+}
+
+.sub-heading{
+  color: black;
+}
+
+.table-heading{
+  color: black;
 }
 
