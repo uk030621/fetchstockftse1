@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 export default function Home() {
     const [prices, setPrices] = useState({});
+    const [totalPortfolioValue, setTotalPortfolioValue] = useState(0);
     //if you want to add FTSE use '^FTSE' to the list
     const stockSymbols = ['BATS.L', 'NG.L', 'GRG.L', 'SHEL.L', 'SVT.L','LLOY.L','UU.L','BP.L','SGE.L','BT-A.L']; // Stock symbols
 
@@ -26,6 +27,7 @@ export default function Home() {
     useEffect(() => {
         async function fetchData() {
             const fetchedPrices = {};
+            let portfolioValue = 0;
 
             for (const symbol of stockSymbols) {
                 try {
@@ -33,9 +35,17 @@ export default function Home() {
                     const data = await response.json();
                     
                     // Divide the price by 100 and format to 2 decimal places
-                    fetchedPrices[symbol] = data.price !== undefined 
+                    const pricePerShare = data.price !== undefined 
                         ? (data.price / 100).toFixed(2) 
                         : 'Error';
+                    
+                    fetchedPrices[symbol] = pricePerShare;
+
+                    // Calculate total value for this stock and add to portfolio value
+                    if (pricePerShare !== 'Error') {
+                        const totalValue = (pricePerShare * sharesHeld[symbol]).toFixed(2);
+                        portfolioValue += parseFloat(totalValue);
+                    }
                 } catch (error) {
                     console.error(`Error fetching data for ${symbol}:`, error);
                     fetchedPrices[symbol] = 'Error';
@@ -43,6 +53,7 @@ export default function Home() {
             }
 
             setPrices(fetchedPrices);
+            setTotalPortfolioValue(portfolioValue.toFixed(2)); // Set the total portfolio value
         }
 
         fetchData();
@@ -50,14 +61,16 @@ export default function Home() {
 
     return (
         <div style={{ textAlign: 'center', marginTop: '50px' }}>
-            <h1>My FTSE Portfolio</h1>
+             {/* Display the total portfolio value */}
+             <h1>My FTSE Portfolio</h1>
+             <h2 style={{ marginTop: '20px' }}>Total Portfolio Value: £{totalPortfolioValue}</h2>
             <table style={{ margin: '0 auto', borderCollapse: 'collapse', width: '80%' }}>
                 <thead>
                     <tr>
-                        <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>StocK symbol</th>
-                        <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Price per share (£)</th>
-                        <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Shares held (n)</th>
-                        <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Total value (£)</th>
+                        <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Index / Symbol</th>
+                        <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Price per Share (£)</th>
+                        <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Shares Held</th>
+                        <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Total Value (£)</th>
                     </tr>
                 </thead>
                 <tbody>
