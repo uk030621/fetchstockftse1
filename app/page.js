@@ -6,7 +6,30 @@ export default function Home() {
     const [prices, setPrices] = useState([]); // Initialize as an empty array
     const [totalPortfolioValue, setTotalPortfolioValue] = useState(0);
     //if you want to add FTSE use '^FTSE' to the list
-    const stockSymbols = ['BATS.L', 'NG.L', 'GRG.L', 'SHEL.L', 'SVT.L','LLOY.L','UU.L','BP.L','SGE.L','BT-A.L']; // Stock symbols
+    const stockSymbols = [
+        'BATS.L', 
+        'NG.L', 
+        'GRG.L', 
+        'SHEL.L', 
+        'SVT.L',
+        'LLOY.L', 
+        'UU.L', 
+        'BP.L', 
+        'SGE.L', 
+        'BT-A.L', 
+        'AV.L', 
+        'FGP.L', 
+        'CNA.L', 
+        'BARC.L', 
+        'IMB.L',
+        'MKS.L', 
+        'IAG.L', 
+        'GSK.L', 
+        'CCL.L',
+        'VOD.L',
+        'HLN.L',
+        'ENT.L'
+    ]; // Stock symbols
 
     // Number of shares held for each stock
     const sharesHeld = {
@@ -20,7 +43,20 @@ export default function Home() {
         'BP.L': 1500,
         'SGE.L': 475,
         'BT-A.L': 2050,
-    };
+        'AV.L': 505,
+        'FGP.L': 1562,
+        'CNA.L': 1761,
+        'BARC.L': 795,
+        'IMB.L': 83,
+        'MKS.L': 453,
+        'IAG.L': 775,
+        'GSK.L': 46,
+        'CCL.L': 46,
+        'VOD.L': 477,
+        'HLN.L': 58,
+        'ENT.L': 23,
+
+};
 
 
 
