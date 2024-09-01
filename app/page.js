@@ -123,11 +123,11 @@ export default function Home() {
     return (
         <div style={{ textAlign: 'center', marginTop: '50px' }}>
             <div style={{ marginBottom: '20px' }}>
-                <button onClick={handleRefresh} style={{ marginRight: '10px' }}>Refresh</button>
+                <button className="refresh-button" onClick={handleRefresh} style={{ marginRight: '10px' }}>Refresh</button>
             </div>
             <h1 className='heading'>FTSE Stock Portfolio</h1>
             <h2 className="sub-heading" style={{ marginTop: '20px' }}>
-                Total Portfolio Value: £{totalPortfolioValue}
+                Total Portfolio Value: <span className='total-value'>£{totalPortfolioValue}</span>
             </h2>
             {prices === null ? (
                 <p>Loading...</p>
