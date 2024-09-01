@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 export default function Home() {
     const [prices, setPrices] = useState(null);
     const [totalPortfolioValue, setTotalPortfolioValue] = useState(0);
+    const stockValueBaseline= "117856";
 
     const stockSymbols = [
         'BATS.L', 
@@ -110,6 +111,7 @@ export default function Home() {
 
             setPrices(fetchedPrices);
             setTotalPortfolioValue(Math.round(portfolioValue).toLocaleString());
+            
         }
 
         fetchData();
@@ -126,6 +128,7 @@ export default function Home() {
             <h1 className='heading'>FTSE Stock Portfolio</h1>
             <h2 className="sub-heading" style={{ marginTop: '10px' }}>
                 Total Value: <span className='total-value'>£{totalPortfolioValue}</span>
+                
             </h2>
             <div style={{ marginBottom: '20px' }}>
                 <button className="refresh-button" onClick={handleRefresh} style={{ marginRight: '10px' }}>Refresh</button>
