@@ -120,16 +120,10 @@ export default function Home() {
         window.location.reload();
     };
 
-    // Handle the exit button click
-    const handleExit = () => {
-        window.close();
-    };
-
     return (
         <div style={{ textAlign: 'center', marginTop: '50px' }}>
             <div style={{ marginBottom: '20px' }}>
                 <button onClick={handleRefresh} style={{ marginRight: '10px' }}>Refresh</button>
-                <button onClick={handleExit}>Exit</button>
             </div>
             <h1 className='heading'>FTSE Stock Portfolio</h1>
             <h2 className="sub-heading" style={{ marginTop: '20px' }}>
