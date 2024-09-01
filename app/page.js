@@ -121,14 +121,15 @@ export default function Home() {
     };
 
     return (
-        <div style={{ textAlign: 'center', marginTop: '50px' }}>
+        <div style={{ textAlign: 'center', marginTop: '25px' }}>
+            
+            <h1 className='heading'>FTSE Stock Portfolio</h1>
+            <h2 className="sub-heading" style={{ marginTop: '10px' }}>
+                Total Value: <span className='total-value'>£{totalPortfolioValue}</span>
+            </h2>
             <div style={{ marginBottom: '20px' }}>
                 <button className="refresh-button" onClick={handleRefresh} style={{ marginRight: '10px' }}>Refresh</button>
             </div>
-            <h1 className='heading'>FTSE Stock Portfolio</h1>
-            <h2 className="sub-heading" style={{ marginTop: '20px' }}>
-                Total Value: <span className='total-value'>£{totalPortfolioValue}</span>
-            </h2>
             {prices === null ? (
                 <p>Loading...</p>
             ) : (

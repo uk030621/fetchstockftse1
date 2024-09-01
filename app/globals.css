@@ -7,10 +7,14 @@ body{
   color:black;
   font-size: 2rem;
   font-weight: bolder;
+  margin-bottom: 0px;
+  padding: 0;
 }
 
 .sub-heading{
   color: grey;
+  margin-bottom: 20px;
+  margin-top: 0px;
 }
 
 .table-heading{
