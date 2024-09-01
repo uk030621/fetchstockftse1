@@ -127,7 +127,7 @@ export default function Home() {
             </div>
             <h1 className='heading'>FTSE Stock Portfolio</h1>
             <h2 className="sub-heading" style={{ marginTop: '20px' }}>
-                Total Portfolio Value: <span className='total-value'>£{totalPortfolioValue}</span>
+                Total Value: <span className='total-value'>£{totalPortfolioValue}</span>
             </h2>
             {prices === null ? (
                 <p>Loading...</p>
