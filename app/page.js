@@ -3,9 +3,9 @@
 import { useEffect, useState } from 'react';
 
 export default function Home() {
-    const [prices, setPrices] = useState([]); // Initialize as an empty array
+    const [prices, setPrices] = useState(null); // Initialize as null
     const [totalPortfolioValue, setTotalPortfolioValue] = useState(0);
-    //if you want to add FTSE use '^FTSE' to the list
+
     const stockSymbols = [
         'BATS.L', 
         'NG.L', 
@@ -29,9 +29,8 @@ export default function Home() {
         'VOD.L',
         'HLN.L',
         'ENT.L'
-    ]; // Stock symbols
+    ];
 
-    // Number of shares held for each stock
     const sharesHeld = {
         'BATS.L': 500,
         'NG.L': 1521,
@@ -55,10 +54,7 @@ export default function Home() {
         'VOD.L': 477,
         'HLN.L': 58,
         'ENT.L': 23,
-
-};
-
-
+    };
 
     useEffect(() => {
         async function fetchData() {
@@ -70,12 +66,10 @@ export default function Home() {
                     const response = await fetch(`/api/stock?symbol=${symbol}`);
                     const data = await response.json();
                     
-                    // Divide the price by 100 and keep two decimal places
                     const pricePerShare = data.price !== undefined 
                         ? (data.price / 100).toFixed(2) 
                         : 'Error';
 
-                    // Calculate total value for this stock
                     if (pricePerShare !== 'Error') {
                         const totalValue = Math.round(pricePerShare * sharesHeld[symbol]);
                         portfolioValue += totalValue;
@@ -83,7 +77,7 @@ export default function Home() {
                             symbol: symbol,
                             pricePerShare: pricePerShare,
                             sharesHeld: sharesHeld[symbol],
-                            totalValue: totalValue.toLocaleString()  // Format with commas
+                            totalValue: totalValue.toLocaleString()
                         });
                     } else {
                         fetchedPrices.push({
@@ -104,15 +98,14 @@ export default function Home() {
                 }
             }
 
-            // Sort stocks by total value in descending order
             fetchedPrices.sort((a, b) => {
                 const aValue = a.totalValue !== 'Error' ? parseInt(a.totalValue.replace(/,/g, '')) : 0;
                 const bValue = b.totalValue !== 'Error' ? parseInt(b.totalValue.replace(/,/g, '')) : 0;
                 return bValue - aValue;
             });
 
-            setPrices(fetchedPrices); // Set the sorted array of stock data
-            setTotalPortfolioValue(Math.round(portfolioValue).toLocaleString()); // Set the total portfolio value, rounded to nearest whole number and formatted with commas
+            setPrices(fetchedPrices);
+            setTotalPortfolioValue(Math.round(portfolioValue).toLocaleString());
         }
 
         fetchData();
@@ -120,35 +113,38 @@ export default function Home() {
 
     return (
         <div style={{ textAlign: 'center', marginTop: '50px' }}>
-            <h1 className='heading'>My FTSE Stock Portfolio</h1>
-            {/* Display the total portfolio value */}
-            <h2 className="sub-heading" style={{ marginTop: '20px' }}>Total Portfolio Value: £{totalPortfolioValue}</h2>
-            <table style={{ margin: '0 auto', borderCollapse: 'collapse', width: '80%' }}>
-                <thead className='table-heading'>
-                    <tr>
-                        <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Stock Symbol</th>
-                        <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Price per share (£)</th>
-                        <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Shares held</th>
-                        <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Total value (£)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {prices.map(stock => (
-                        <tr key={stock.symbol}>
-                            <td style={{ border: '1px solid black', padding: '8px' }}>{stock.symbol}</td>
-                            <td style={{ border: '1px solid black', padding: '8px' }}>
-                                {stock.pricePerShare !== undefined ? `${stock.pricePerShare}` : 'Loading...'}
-                            </td>
-                            <td style={{ border: '1px solid black', padding: '8px' }}>{stock.sharesHeld}</td>
-                            <td style={{ border: '1px solid black', padding: '8px' }}>
-                                {stock.totalValue !== undefined ? `${stock.totalValue}` : 'Loading...'}
-                            </td>
+            <h1 className='heading'>FTSE Stock Portfolio</h1>
+            <h2 className="sub-heading" style={{ marginTop: '20px' }}>
+                Total Portfolio Value: £{totalPortfolioValue}
+            </h2>
+            {prices === null ? (
+                <p>Loading...</p>
+            ) : (
+                <table style={{ margin: '0 auto', borderCollapse: 'collapse', width: '80%' }}>
+                    <thead className='table-heading'>
+                        <tr>
+                            <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Stock Symbol</th>
+                            <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Price per share (£)</th>
+                            <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Shares held</th>
+                            <th style={{ border: '1px solid black', padding: '8px', backgroundColor: '#f2f2f2' }}>Total value (£)</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-
-            
+                    </thead>
+                    <tbody>
+                        {prices.map(stock => (
+                            <tr key={stock.symbol}>
+                                <td style={{ border: '1px solid black', padding: '8px' }}>{stock.symbol}</td>
+                                <td style={{ border: '1px solid black', padding: '8px' }}>
+                                    {stock.pricePerShare !== undefined ? `${stock.pricePerShare}` : 'Loading...'}
+                                </td>
+                                <td style={{ border: '1px solid black', padding: '8px' }}>{stock.sharesHeld}</td>
+                                <td style={{ border: '1px solid black', padding: '8px' }}>
+                                    {stock.totalValue !== undefined ? `${stock.totalValue}` : 'Loading...'}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
         </div>
     );
 }
