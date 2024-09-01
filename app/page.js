@@ -132,6 +132,7 @@ export default function Home() {
             </h2>
             <div style={{ marginBottom: '20px' }}>
                 <button className="refresh-button" onClick={handleRefresh} style={{ marginRight: '10px' }}>Refresh</button>
+                <a className='hyperlink1' href="https://stockcharting.vercel.app/" onClick="window.close()" rel="noopener noreferrer"style={{ color: 'black' }}>Stock Value Charting</a>
             </div>
             {prices === null ? (
                 <p>Loading...</p>

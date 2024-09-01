@@ -37,3 +37,13 @@ body{
   font-weight: bold;
 }
 
+.hyperlink1{
+  text-decoration: none;
+  margin-left: 20px;
+  color: grey;
+}
+
+.hyperlink1:hover{
+  text-decoration: underline;
+  font-weight: bolder;
+}
