@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 export default function Home() {
-    const [prices, setPrices] = useState(null); // Initialize as null
+    const [prices, setPrices] = useState(null);
     const [totalPortfolioValue, setTotalPortfolioValue] = useState(0);
 
     const stockSymbols = [
@@ -58,46 +58,50 @@ export default function Home() {
 
     useEffect(() => {
         async function fetchData() {
-            const fetchedPrices = [];
-            let portfolioValue = 0;
-
-            for (const symbol of stockSymbols) {
+            const promises = stockSymbols.map(async (symbol) => {
                 try {
                     const response = await fetch(`/api/stock?symbol=${symbol}`);
                     const data = await response.json();
-                    
+
                     const pricePerShare = data.price !== undefined 
                         ? (data.price / 100).toFixed(2) 
                         : 'Error';
 
                     if (pricePerShare !== 'Error') {
                         const totalValue = Math.round(pricePerShare * sharesHeld[symbol]);
-                        portfolioValue += totalValue;
-                        fetchedPrices.push({
+                        return {
                             symbol: symbol,
                             pricePerShare: pricePerShare,
                             sharesHeld: sharesHeld[symbol],
                             totalValue: totalValue.toLocaleString()
-                        });
+                        };
                     } else {
-                        fetchedPrices.push({
+                        return {
                             symbol: symbol,
                             pricePerShare: 'Error',
                             sharesHeld: sharesHeld[symbol],
                             totalValue: 'Error'
-                        });
+                        };
                     }
                 } catch (error) {
                     console.error(`Error fetching data for ${symbol}:`, error);
-                    fetchedPrices.push({
+                    return {
                         symbol: symbol,
                         pricePerShare: 'Error',
                         sharesHeld: sharesHeld[symbol],
                         totalValue: 'Error'
-                    });
+                    };
                 }
-            }
+            });
 
+            const fetchedPrices = await Promise.all(promises);
+
+            const portfolioValue = fetchedPrices.reduce((sum, stock) => {
+                const totalValue = stock.totalValue !== 'Error' ? parseInt(stock.totalValue.replace(/,/g, '')) : 0;
+                return sum + totalValue;
+            }, 0);
+
+            // Sort stocks by total value in descending order
             fetchedPrices.sort((a, b) => {
                 const aValue = a.totalValue !== 'Error' ? parseInt(a.totalValue.replace(/,/g, '')) : 0;
                 const bValue = b.totalValue !== 'Error' ? parseInt(b.totalValue.replace(/,/g, '')) : 0;
